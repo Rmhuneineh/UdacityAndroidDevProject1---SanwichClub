@@ -1,5 +1,7 @@
 package com.udacity.sandwichclub.utils;
 
+import android.util.Log;
+
 import com.udacity.sandwichclub.model.Sandwich;
 
 import org.json.JSONArray;
@@ -13,9 +15,6 @@ public class JsonUtils {
 
     public static Sandwich parseSandwichJson(String json) {
 
-
-
-
         try {
 
             JSONObject jsonObject = new JSONObject(json);
@@ -23,29 +22,36 @@ public class JsonUtils {
 
             String sandwichName = objectName.getString("mainName");
 
-            JSONArray alsoKnownAsJsonArray = jsonObject.getJSONArray("alsoKnownAs");
+            JSONArray alsoKnownAsJsonArray = objectName.getJSONArray("alsoKnownAs");
             List<String> alsoKnownAs = new ArrayList<>();
             for(int i=0; i<alsoKnownAsJsonArray.length(); i++) {
                 alsoKnownAs.add(alsoKnownAsJsonArray.getString(i));
             }
 
             String origin = "";
-            if(objectName.has("placeOfOrigin")) {
-                origin = objectName.getString("placeOfOrigin");
+            if(jsonObject.has("placeOfOrigin")) {
+                origin = jsonObject.getString("placeOfOrigin");
             }
 
-            String description = objectName.getString("description");
+            String description = jsonObject.getString("description");
 
-            String imagePath = objectName.getString("image");
+            String imagePath = jsonObject.getString("image");
 
-            JSONArray ingredientsArray = objectName.getJSONArray("ingredients");
+            JSONArray ingredientsArray = jsonObject.getJSONArray("ingredients");
             List<String> ingredients = new ArrayList<>();
             for(int i=0; i<ingredientsArray.length(); i++) {
                 ingredients.add(ingredientsArray.getString(i));
             }
 
+            Log.v("JsonUtils", "Sandwich name: " + sandwichName +
+                    " \nAlso known as: " + alsoKnownAs + " \nOrigin: " + origin +
+                    " \nDescription: " + description + " \nImage path: " + imagePath +
+                    " \nIngredients: " + ingredients);
+
             Sandwich sandwich = new Sandwich(sandwichName, alsoKnownAs, origin, description,
                     imagePath, ingredients);
+
+            return sandwich;
 
         } catch (JSONException e) {
             e.printStackTrace();
